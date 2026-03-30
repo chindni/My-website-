@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clip & Discults - Share Clips, Spark Discussions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Features */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Clips Section */
+        .clips-section {
+            padding: 80px 0;
+            background: #f8f9ff;
+        }
+
+        .clips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .clip-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .clip-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .clip-thumbnail {
+            height: 200px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        .play-button {
+            font-size: 3rem;
+            margin-left: 10px;
+        }
+
+        .clip-info {
+            padding: 1.5rem;
+        }
+
+        .clip-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .clip-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* Stats */
+        .stats {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background: #222;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">Clip & Discults</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#clips">Clips</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <a href="#signup" class="cta-button">Get Started</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero fade-in-up">
+        <div class="container">
+            <h1>Share Clips. Spark Discussions.</h1>
+            <p>Discover amazing video clips and join passionate discussions. 
+               Create, share, and engage with content that matters.</p>
+            <div class="hero-buttons">
+                <a href="#clips" class="cta-button">Explore Clips</a>
+                <a href="#signup" class="cta-button" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);">Start Creating</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title fade-in-up">Why Choose Clip & Discults?</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">🎥</div>
+                    <h3>Clip Sharing</h3>
+                    <p>Upload and share your favorite video moments instantly. 
+                       Perfect for highlights, reactions, and tutorials.</p>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">💬</div>
+                    <h3>Rich Discussions</h3>
+                    <p>Join meaningful conversations around every clip. 
+                       Connect with people who share your interests.</p>
+                </div>
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Instant uploads, real-time comments, and smooth playback. 
+                       Experience speed like never before.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clips Section -->
+    <section id="clips" class="clips-section">
+        <div class="container">
+            <h2 class="section-title fade-in-up">Featured Clips</h2>
+            <div class="clips-grid">
+                <div class="clip-card fade-in-up">
+                    <div class="clip-thumbnail">
+                        Epic Gaming Moment<span class="play-button">▶</span>
+                    </div>
+                    <div class="clip-info">
+                        <div class="clip-title">Insane Clutch Play!</div>
+                        <div class="clip-meta">
+                            <span>12K views</span>
+                            <span>2.3K comments</span>
+                            <span>3 days ago</span>
+                        </div>
+                        <p>Watch this unbelievable gaming moment that had everyone speechless!</p>
+                    </div>
+                </div>
+                <div class="clip-card fade-in-up">
+                    <div class="clip-thumbnail">
+                        Tech Review<span class="play-button">▶</span>
+                    </div>
+                    <div class="clip-info">
+                        <div class="clip-title">Latest Smartphone Review</div>
+                        <div class="clip-meta">
+                            <span>8.5K views</span>
+                            <span>1.8K comments</span>
+                            <span>1 week ago</span>
+                        </div>
+                        <p>Honest review of the newest flagship smartphone.</p>
+                    </div>
+                </div>
+                <div class="clip-card fade-in-up">
+                    <div class="clip-thumbnail">
+                        Funny Fail<span class="play-button">▶</span>
+                    </div>
+                    <div class="clip-info">
+                        <div class="clip-title">Epic Fail Compilation</div>
+                        <div class="clip-meta">
+                            <span>25K views</span>
+                            <span>4.2K comments</span>
+                            <span>2 days ago</span>
+                        </div>
+                        <p>Laugh out loud with these hilarious moments!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Platform Stats</h2>
+            <div class="stats-grid">
+                <div>
+                    <div class="stat">50K+</div>
+                    <div class="stat-label">Clips Shared</div>
+                </div>
+                <div>
+                    <div class="stat">1M+</div>
+                    <div class="stat-label">Discussions</div>
+                </div>
+                <div>
+                    <div class="stat">100K+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div>
+                    <div class="stat">24/7</div>
+                    <div class="stat-label">Live Activity</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Clip & Discults</h3>
+                    <p>The ultimate platform for sharing video clips and engaging in meaningful discussions. Connect with creators and viewers worldwide.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Platform</h3>
+                    <a href="#">Upload Clip</a>
+                    <a href="#">Browse Clips</a>
+                    <a href="#">Create Discussion</a>
+                    <a href="#">Live Streams</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <a href="#">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Press</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <a href="#">Help Center</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Status</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Clip & Discults. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
