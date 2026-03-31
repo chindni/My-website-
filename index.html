@@ -77,7 +77,6 @@ display: flex;
 
 /* 👇 YAHAN SE NAYA BLOCK START */
 #popup {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -118,11 +117,10 @@ nav a {
     justify-content: center;
     align-items: center;
   }
-
 #popup img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 10px;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
   }
   font-size: 18px;
 }
@@ -243,7 +241,7 @@ function changeText() {
     }
   }, 100);
 }
-      function shareImage(src) {
+ function shareImage(src) {
     if (navigator.share) {
         navigator.share({
             title: 'Check this image',
@@ -253,15 +251,17 @@ function changeText() {
     } else {
         alert("Share supported nahi hai");
     }
-      }
+}
+
 function openImage(src) {
-  document.getElementById("popup").style.display = "block";
-  document.getElementById("popupImg").src = src;
+    let popup = document.getElementById("popup");
+    popup.style.display = "flex";
+    document.getElementById("popupImg").src = src;
 }
 
 function closeImage() {
-  document.getElementById("popup").style.display = "none";
-}
+    document.getElementById("popup").style.display = "none";
+      }  
 </script>
 </body>
 
