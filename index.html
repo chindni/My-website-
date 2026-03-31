@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
@@ -23,28 +24,161 @@
 .gallery img:hover {
   transform: scale(1.1);
 }
+  .gallery img:hover {
+    transform: scale(1.1);
+}
+
+/* 👇 YAHAN PASTE KARO (line 26 ke baad) */
+.img-box {
+    position: relative;
+    width: 30%;
+}
+
+.img-box img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.img-box:hover .overlay {
+    opacity: 1;
+  }
+  nav {
+  background: black;
+  padding: 10px;
+  text-align: center;
+}
+
+nav a {
+  color: white;
+  margin: 10px;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+nav a:hover {
+  color: yellow;
+}
+  body {
+  background-image: url("your-image.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+   
+  }
+  h1 {
+  color: yellow;
+  font-size: 32px;
+  text-align: center;
+}
+
+p {
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  }
+  
+    .gallery img {
+  width: 30%;
+  border-radius: 10px;
+  cursor: pointer;
+      transition: 0.3s;
+  }
+  #text {
+  text-shadow: 0 0 10px yellow, 0 0 20px orange;
+  }
+  button {
+  background-color: yellow;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+    transition: 0.3s;
+  cursor: pointer;
+  }
+}
+button:hover {
+  background-color: orange;
+  }  
 </style>
 
 
 
 </head>
+  
 
   <body>
+<nav>
+  <a href="#">Home</a>
+  <a href="#">About</a>
+  <a href="#">Contact</a>
+</nav>
+    
 
 <h1>Welcome to my website 🎉</h1>
-<p>Ye meri first website hai</p>
+<p id="text">Ye meri first website hai</p>
+    <button onclick="changeText()">Click Me</button>
 
 <div class="gallery">
-  <img src="IMG-20260325-WA0003.jpg" onclick="openImage(this.src)">
-<img src="IMG-20260325-WA0007.jpg" onclick="openImage(this.src)">
-<img src="IMG-20260325-WA0008.jpg" onclick="openImage(this.src)">
-<img src="IMG-20260325-WA0010.jpg" onclick="openImage(this.src)">
-</div>
+
+    <div class="img-box">
+        <img src="IMG-20260325-WA0003.jpg" onclick="openImage(this.src)">
+        <div class="overlay">Image 1</div>
+    </div>
+
+    <div class="img-box">
+        <img src="IMG-20260325-WA0007.jpg" onclick="openImage(this.src)">
+        <div class="overlay">Image 2</div>
+    </div>
+
+    <div class="img-box">
+        <img src="IMG-20260325-WA0008.jpg" onclick="openImage(this.src)">
+        <div class="overlay">Image 3</div>
+    </div>
+
+    <div class="img-box">
+        <img src="IMG-20260325-WA0010.jpg" onclick="openImage(this.src)">
+        <div class="overlay">Image 4</div>
+    </div>
+
+          </div>
+    
 <div id="popup" onclick="closeImage()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black;">
   <img id="popupImg" style="width:90%; margin:5% auto; display:block;">
 </div>
 
-<script>
+    <script>
+function changeText() {
+  let text = document.getElementById("text");
+  let message = "Welcome to my website 😎";
+  let i = 0;
+
+  text.innerText = "";
+
+  let interval = setInterval(() => {
+    text.innerText += message[i];
+    i++;
+    if (i >= message.length) {
+      clearInterval(interval);
+    }
+  }, 100);
+}
 function openImage(src) {
   document.getElementById("popup").style.display = "block";
   document.getElementById("popupImg").src = src;
