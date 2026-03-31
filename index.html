@@ -33,12 +33,15 @@ display: flex;
 .gallery {
     display: flex;
     flex-direction: column;
+    align-items: center;   /* 👉 center me laayega */
+    gap: 20px;             /* thoda space */
 }
 
 .img-box {
     position: relative;
-    width: 100%;
-}
+    width: 90%;   /* 👉 bada size (100% bhi kar sakte ho) */
+    max-width: 400px;  /* 👉 control size */
+  }
 
 .overlay {
     position: absolute;
@@ -158,21 +161,25 @@ button:hover {
     <div class="img-box">
         <img src="IMG-20260325-WA0003.jpg" onclick="openImage(this.src)">
         <div class="overlay">Image 1</div>
+      <a href="IMAGE-NAME.jpg" download class="save-btn">Save</a>
     </div>
 
     <div class="img-box">
         <img src="IMG-20260325-WA0007.jpg" onclick="openImage(this.src)">
         <div class="overlay">Image 2</div>
+      <a href="IMAGE-NAME.jpg" download class="save-btn">Save</a>
     </div>
 
     <div class="img-box">
         <img src="IMG-20260325-WA0008.jpg" onclick="openImage(this.src)">
         <div class="overlay">Image 3</div>
+      <a href="IMAGE-NAME.jpg" download class="save-btn">Save</a>
     </div>
 
     <div class="img-box">
         <img src="IMG-20260325-WA0010.jpg" onclick="openImage(this.src)">
         <div class="overlay">Image 4</div>
+      <a href="IMAGE-NAME.jpg" download class="save-btn">Save</a>
     </div>
 
           </div>
