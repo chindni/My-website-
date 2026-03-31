@@ -58,6 +58,23 @@ display: flex;
     opacity: 0;
     transition: 0.3s;
 }
+  .share-btn {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: white;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.img-box:hover .share-btn {
+    opacity: 1;
+}
 
 .img-box:hover .overlay {
     opacity: 1;
@@ -162,24 +179,28 @@ button:hover {
         <img src="IMG-20260325-WA0003.jpg" onclick="openImage(this.src)">
         <div class="overlay">Image 1</div>
       <a href="IMAGE-NAME.jpg" download class="save-btn">Save</a>
+      <button class="share-btn" onclick="shareImage('IMG-20260325-WA0003.jpg')">Share</button>
     </div>
 
     <div class="img-box">
         <img src="IMG-20260325-WA0007.jpg" onclick="openImage(this.src)">
         <div class="overlay">Image 2</div>
       <a href="IMAGE-NAME.jpg" download class="save-btn">Save</a>
+      <button class="share-btn" onclick="shareImage('IMG-20260325-WA0003.jpg')">Share</button>
     </div>
 
     <div class="img-box">
         <img src="IMG-20260325-WA0008.jpg" onclick="openImage(this.src)">
         <div class="overlay">Image 3</div>
       <a href="IMAGE-NAME.jpg" download class="save-btn">Save</a>
+      <button class="share-btn" onclick="shareImage('IMG-20260325-WA0003.jpg')">Share</button>
     </div>
 
     <div class="img-box">
         <img src="IMG-20260325-WA0010.jpg" onclick="openImage(this.src)">
         <div class="overlay">Image 4</div>
       <a href="IMAGE-NAME.jpg" download class="save-btn">Save</a>
+      <button class="share-btn" onclick="shareImage('IMG-20260325-WA0003.jpg')">Share</button>
     </div>
 
           </div>
@@ -204,6 +225,17 @@ function changeText() {
     }
   }, 100);
 }
+      function shareImage(src) {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Check this image',
+            text: 'Dekho ye photo!',
+            url: src
+        });
+    } else {
+        alert("Share supported nahi hai");
+    }
+      }
 function openImage(src) {
   document.getElementById("popup").style.display = "block";
   document.getElementById("popupImg").src = src;
