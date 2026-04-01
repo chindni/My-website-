@@ -2,28 +2,33 @@
 <head>
 <title>Photo Gallery</title><style>
 body {
-  background: black;
+  background: skyblue; /* sky blue background */
   font-family: Arial;
 }
 
 h1 {
-  color: yellow;
+  color: black;
   text-align: center;
 }
 
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  justify-content: center; /* center me layega */
   gap: 15px;
   padding: 20px;
+  flex-wrap: nowrap; /* ek hi line me rakhega */
+  overflow-x: auto; /* zyada photo ho to scroll hoga */
 }
 
 .img-box {
   position: relative;
+  min-width: 200px;
 }
 
 .img-box img {
-  width: 100%;
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
   border-radius: 10px;
   cursor: pointer;
 }
@@ -77,16 +82,15 @@ h1 {
   <img id="popupImg">
 </div><script>
 
-// 🔥 YAHAN APNI SAARI PHOTOS KE NAAM DAALO
 let images = [
   "IMG-20260325-WA0003.jpg",
   "IMG-20260325-WA0007.jpg",
   "IMG-20260325-WA0008.jpg",
   "IMG-20260325-WA0010.jpg",
-  "Snapchat-1816127803.jpg",
-  "IMG_20260318_095656_509.jpg",
+  "lv_0_20260219200139.jpg",
   "Snapchat-1316453477.jpg",
-  "lv_0_20260219200139.jpg"
+"IMG_20260318_095656_509.jpg",
+"Snapchat-1816127803.jpg
 ];
 
 let gallery = document.getElementById("gallery");
