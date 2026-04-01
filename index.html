@@ -1,30 +1,35 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html>
 <head>
-<title>Photo Gallery</title><style>
+<title>My Website</title>
+
+<style>
 body {
-  background: skyblue; /* sky blue background */
+  background: skyblue;
   font-family: Arial;
+  margin: 0;
 }
 
 h1 {
-  color: black;
   text-align: center;
 }
 
+/* Gallery */
 .gallery {
   display: flex;
-  justify-content: center; /* center me layega */
+  justify-content: center;
   gap: 15px;
   padding: 20px;
-  flex-wrap: nowrap; /* ek hi line me rakhega */
-  overflow-x: auto; /* zyada photo ho to scroll hoga */
+  overflow-x: auto;
 }
 
+/* Image box */
 .img-box {
-  position: relative;
+  text-align: center;
   min-width: 200px;
 }
 
+/* Image */
 .img-box img {
   width: 200px;
   height: 150px;
@@ -33,33 +38,26 @@ h1 {
   cursor: pointer;
 }
 
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: 0.3s;
-  border-radius: 10px;
-  pointer-events: none;
-}
-
-.img-box:hover .overlay { opacity: 1; }
-
+/* Actions */
 .actions {
   display: flex;
   justify-content: space-between;
   margin-top: 5px;
 }
 
-.like { color: red; cursor: pointer; }
+.like {
+  color: red;
+  cursor: pointer;
+}
 
+/* Comment */
+.comment-box input {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+}
+
+/* Popup */
 #popup {
   display: none;
   position: fixed;
@@ -77,64 +75,96 @@ h1 {
   max-width: 100%;
   max-height: 100%;
 }
+</style>
 
-</style></head><body><h1>My Photo Gallery 📸</h1><div class="gallery" id="gallery"></div><div id="popup" onclick="closeImage()">
-  <img id="popupImg">
-</div><script>
+</head>
 
+<body>
+
+<h1>My Photo Gallery 📸</h1>
+
+<div class="gallery" id="gallery"></div>
+
+<div id="popup" onclick="closeImage()">
+<img id="popupImg">
+</div>
+
+<script>
+
+// 🔥 YAHAN SIRF PHOTO NAME ADD KARO
 let images = [
   "IMG-20260325-WA0003.jpg",
   "IMG-20260325-WA0007.jpg",
   "IMG-20260325-WA0008.jpg",
   "IMG-20260325-WA0010.jpg",
-"lv_0_20260219200139.jpg",
+  "lv_0_20260219200139.jpg",
 "Snapchat-1316453477.jpg",
 "IMG_20260318_095656_509.jpg",
 "Snapchat-1816127803.jpg
 ];
 
+// AUTO SYSTEM
 let gallery = document.getElementById("gallery");
 
-images.forEach((src, index) => {
+images.forEach((src) => {
   let box = document.createElement("div");
   box.className = "img-box";
 
   box.innerHTML = `
     <img src="${src}" onclick="openImage('${src}')">
-    <div class="overlay">Image ${index + 1}</div>
-
+    
     <div class="actions">
       <span class="like" onclick="like(this)">❤️ 0</span>
       <a href="${src}" download>Save</a>
       <button onclick="shareImage('${src}')">Share</button>
+    </div>
+
+    <div class="comment-box">
+      <input type="text" placeholder="Comment..." onkeydown="addComment(event,this)">
+      <div></div>
     </div>
   `;
 
   gallery.appendChild(box);
 });
 
+// Like
 function like(el) {
-  let count = parseInt(el.innerText.split(" ")[1]);
-  count++;
-  el.innerText = "❤️ " + count;
+let count = parseInt(el.innerText.split(" ")[1]);
+count++;
+el.innerText = "❤️ " + count;
 }
 
+// Share
 function shareImage(src) {
-  if (navigator.share) {
-    navigator.share({ title:'Check', url: src });
-  } else {
-    alert("Share not supported");
-  }
+if (navigator.share) {
+navigator.share({ title: "Check", url: src });
+} else {
+alert("Share not supported");
+}
 }
 
+// Fullscreen
 function openImage(src) {
-  document.getElementById("popup").style.display = "flex";
-  document.getElementById("popupImg").src = src;
+document.getElementById("popup").style.display = "flex";
+document.getElementById("popupImg").src = src;
 }
 
 function closeImage() {
-  document.getElementById("popup").style.display = "none";
+document.getElementById("popup").style.display = "none";
 }
 
-</script></body>
+// Comment
+function addComment(e, input) {
+if (e.key === "Enter" && input.value !== "") {
+let div = document.createElement("div");
+div.innerText = input.value;
+input.nextElementSibling.appendChild(div);
+input.value = "";
+}
+}
+
+</script>
+
+</body>
 </html>
