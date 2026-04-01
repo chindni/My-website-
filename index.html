@@ -5,7 +5,7 @@
 
 <style>
 body {
-  background: skyblue;
+  background: white;
   font-family: Arial;
   margin: 0;
 }
@@ -91,19 +91,20 @@ h1 {
 
 <script>
 
-// 🔥 YAHAN SIRF PHOTO NAME ADD KARO
+// 🔥 ALL PHOTOS HERE (EDIT HERE ONLY)
 let images = [
   "IMG-20260325-WA0003.jpg",
   "IMG-20260325-WA0007.jpg",
   "IMG-20260325-WA0008.jpg",
   "IMG-20260325-WA0010.jpg",
+
   "lv_0_20260219200139.jpg",
-"Snapchat-1316453477.jpg",
-"IMG_20260318_095656_509.jpg",
-"Snapchat-1816127803.jpg
+  "Snapchat-1316453477.jpg",
+  "IMG_20260318_095656_509.jpg",
+  "Snapchat-1816127803.jpg"
 ];
 
-// AUTO SYSTEM
+// AUTO GALLERY
 let gallery = document.getElementById("gallery");
 
 images.forEach((src) => {
@@ -130,38 +131,38 @@ images.forEach((src) => {
 
 // Like
 function like(el) {
-let count = parseInt(el.innerText.split(" ")[1]);
-count++;
-el.innerText = "❤️ " + count;
+  let count = parseInt(el.innerText.split(" ")[1]);
+  count++;
+  el.innerText = "❤️ " + count;
 }
 
 // Share
 function shareImage(src) {
-if (navigator.share) {
-navigator.share({ title: "Check", url: src });
-} else {
-alert("Share not supported");
-}
+  if (navigator.share) {
+    navigator.share({ title: "Check", url: src });
+  } else {
+    alert("Share not supported");
+  }
 }
 
 // Fullscreen
 function openImage(src) {
-document.getElementById("popup").style.display = "flex";
-document.getElementById("popupImg").src = src;
+  document.getElementById("popup").style.display = "flex";
+  document.getElementById("popupImg").src = src;
 }
 
 function closeImage() {
-document.getElementById("popup").style.display = "none";
+  document.getElementById("popup").style.display = "none";
 }
 
 // Comment
 function addComment(e, input) {
-if (e.key === "Enter" && input.value !== "") {
-let div = document.createElement("div");
-div.innerText = input.value;
-input.nextElementSibling.appendChild(div);
-input.value = "";
-}
+  if (e.key === "Enter" && input.value !== "") {
+    let div = document.createElement("div");
+    div.innerText = input.value;
+    input.nextElementSibling.appendChild(div);
+    input.value = "";
+  }
 }
 
 </script>
