@@ -71,6 +71,7 @@ button {
   border-radius: 10px;
   opacity: 0;
   transition: 0.3s;
+  pointer-events: none; /* FIX: click image pe hi jayega */
 }
 
 .img-box:hover .overlay { opacity: 1; }
@@ -93,6 +94,7 @@ button {
   background: rgba(0,0,0,0.9);
   justify-content: center;
   align-items: center;
+  z-index: 9999; /* FIX: ensure popup upar aaye */
 }
 
 #popup img {
@@ -116,12 +118,51 @@ button {
   <a href="#">Contact</a>
 </nav><h1>Welcome to my website 🎉</h1>
 <p id="text">Ye meri first website hai</p>
-<button onclick="changeText()">Click Me</button><div class="gallery">  <!-- IMAGE BOX -->  <div class="img-box">
+<button onclick="changeText()">Click Me</button><div class="gallery">  <!-- IMAGE BOX 1 -->  <div class="img-box">
     <img src="IMG-20260325-WA0003.jpg" onclick="openImage(this.src)">
     <div class="overlay">Image 1</div><div class="actions">
   <span class="like" onclick="like(this)">❤️ 0</span>
   <a href="IMG-20260325-WA0003.jpg" download>Save</a>
   <button onclick="shareImage('IMG-20260325-WA0003.jpg')">Share</button>
+</div>
+
+<div class="comment-box">
+  <input type="text" placeholder="Comment..." onkeydown="addComment(event,this)">
+  <div class="comments"></div>
+</div>
+
+  </div>  <!-- IMAGE BOX 2 -->  <div class="img-box">
+    <img src="IMG-20260325-WA0007.jpg" onclick="openImage(this.src)">
+    <div class="overlay">Image 2</div><div class="actions">
+  <span class="like" onclick="like(this)">❤️ 0</span>
+  <a href="IMG-20260325-WA0007.jpg" download>Save</a>
+  <button onclick="shareImage('IMG-20260325-WA0007.jpg')">Share</button>
+</div>
+
+<div class="comment-box">
+  <input type="text" placeholder="Comment..." onkeydown="addComment(event,this)">
+  <div class="comments"></div>
+</div>
+
+  </div>  <!-- IMAGE BOX 3 -->  <div class="img-box">
+    <img src="IMG-20260325-WA0008.jpg" onclick="openImage(this.src)">
+    <div class="overlay">Image 3</div><div class="actions">
+  <span class="like" onclick="like(this)">❤️ 0</span>
+  <a href="IMG-20260325-WA0008.jpg" download>Save</a>
+  <button onclick="shareImage('IMG-20260325-WA0008.jpg')">Share</button>
+</div>
+
+<div class="comment-box">
+  <input type="text" placeholder="Comment..." onkeydown="addComment(event,this)">
+  <div class="comments"></div>
+</div>
+
+  </div>  <!-- IMAGE BOX 4 -->  <div class="img-box">
+    <img src="IMG-20260325-WA0010.jpg" onclick="openImage(this.src)">
+    <div class="overlay">Image 4</div><div class="actions">
+  <span class="like" onclick="like(this)">❤️ 0</span>
+  <a href="IMG-20260325-WA0010.jpg" download>Save</a>
+  <button onclick="shareImage('IMG-20260325-WA0010.jpg')">Share</button>
 </div>
 
 <div class="comment-box">
@@ -170,4 +211,4 @@ function addComment(e, input) {
   }
 }
 </script></body>
-  </html>
+    </html>
