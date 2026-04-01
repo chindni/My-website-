@@ -1,60 +1,31 @@
 <!DOCTYPE html><html>
 <head>
-<title>My Website</title><style>
+<title>Photo Gallery</title><style>
 body {
-  background-image: url("your-image.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-nav {
   background: black;
-  padding: 10px;
-  text-align: center;
+  font-family: Arial;
 }
-
-nav a {
-  color: white;
-  margin: 10px;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-nav a:hover { color: yellow; }
 
 h1 {
   color: yellow;
   text-align: center;
 }
 
-p { color: white; text-align: center; }
-
-button {
-  background-color: yellow;
-  color: black;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
 .gallery {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  padding: 20px;
 }
 
 .img-box {
   position: relative;
-  width: 90%;
-  max-width: 400px;
 }
 
-.gallery img {
+.img-box img {
   width: 100%;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .overlay {
@@ -68,17 +39,17 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
   opacity: 0;
   transition: 0.3s;
-  pointer-events: none; /* FIX: click image pe hi jayega */
+  border-radius: 10px;
+  pointer-events: none;
 }
 
 .img-box:hover .overlay { opacity: 1; }
 
 .actions {
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
   margin-top: 5px;
 }
 
@@ -94,7 +65,7 @@ button {
   background: rgba(0,0,0,0.9);
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* FIX: ensure popup upar aaye */
+  z-index: 9999;
 }
 
 #popup img {
@@ -102,79 +73,46 @@ button {
   max-height: 100%;
 }
 
-.comment-box {
-  width: 100%;
-  margin-top: 5px;
-}
-
-.comment-box input {
-  width: 70%;
-  padding: 5px;
-}
-
-</style></head><body><nav>
-  <a href="#">Home</a>
-  <a href="#">About</a>
-  <a href="#">Contact</a>
-</nav><h1>Welcome to my website 🎉</h1>
-<p id="text">Ye meri first website hai</p>
-<button onclick="changeText()">Click Me</button><div class="gallery">  <!-- IMAGE BOX 1 -->  <div class="img-box">
-    <img src="IMG-20260325-WA0003.jpg" onclick="openImage(this.src)">
-    <div class="overlay">Image 1</div><div class="actions">
-  <span class="like" onclick="like(this)">❤️ 0</span>
-  <a href="IMG-20260325-WA0003.jpg" download>Save</a>
-  <button onclick="shareImage('IMG-20260325-WA0003.jpg')">Share</button>
-</div>
-
-<div class="comment-box">
-  <input type="text" placeholder="Comment..." onkeydown="addComment(event,this)">
-  <div class="comments"></div>
-</div>
-
-  </div>  <!-- IMAGE BOX 2 -->  <div class="img-box">
-    <img src="IMG-20260325-WA0007.jpg" onclick="openImage(this.src)">
-    <div class="overlay">Image 2</div><div class="actions">
-  <span class="like" onclick="like(this)">❤️ 0</span>
-  <a href="IMG-20260325-WA0007.jpg" download>Save</a>
-  <button onclick="shareImage('IMG-20260325-WA0007.jpg')">Share</button>
-</div>
-
-<div class="comment-box">
-  <input type="text" placeholder="Comment..." onkeydown="addComment(event,this)">
-  <div class="comments"></div>
-</div>
-
-  </div>  <!-- IMAGE BOX 3 -->  <div class="img-box">
-    <img src="IMG-20260325-WA0008.jpg" onclick="openImage(this.src)">
-    <div class="overlay">Image 3</div><div class="actions">
-  <span class="like" onclick="like(this)">❤️ 0</span>
-  <a href="IMG-20260325-WA0008.jpg" download>Save</a>
-  <button onclick="shareImage('IMG-20260325-WA0008.jpg')">Share</button>
-</div>
-
-<div class="comment-box">
-  <input type="text" placeholder="Comment..." onkeydown="addComment(event,this)">
-  <div class="comments"></div>
-</div>
-
-  </div>  <!-- IMAGE BOX 4 -->  <div class="img-box">
-    <img src="IMG-20260325-WA0010.jpg" onclick="openImage(this.src)">
-    <div class="overlay">Image 4</div><div class="actions">
-  <span class="like" onclick="like(this)">❤️ 0</span>
-  <a href="IMG-20260325-WA0010.jpg" download>Save</a>
-  <button onclick="shareImage('IMG-20260325-WA0010.jpg')">Share</button>
-</div>
-
-<div class="comment-box">
-  <input type="text" placeholder="Comment..." onkeydown="addComment(event,this)">
-  <div class="comments"></div>
-</div>
-
-  </div></div><div id="popup" onclick="closeImage()">
+</style></head><body><h1>My Photo Gallery 📸</h1><div class="gallery" id="gallery"></div><div id="popup" onclick="closeImage()">
   <img id="popupImg">
 </div><script>
-function changeText() {
-  document.getElementById("text").innerText = "Welcome 😎";
+
+// 🔥 YAHAN APNI SAARI PHOTOS KE NAAM DAALO
+let images = [
+  "IMG-20260325-WA0003.jpg",
+  "IMG-20260325-WA0007.jpg",
+  "IMG-20260325-WA0008.jpg",
+  "IMG-20260325-WA0010.jpg",
+  "Snapchat-1816127803.jpg",
+  "IMG_20260318_095656_509.jpg",
+  "Snapchat-1316453477.jpg",
+  "lv_0_20260219200139.jpg"
+];
+
+let gallery = document.getElementById("gallery");
+
+images.forEach((src, index) => {
+  let box = document.createElement("div");
+  box.className = "img-box";
+
+  box.innerHTML = `
+    <img src="${src}" onclick="openImage('${src}')">
+    <div class="overlay">Image ${index + 1}</div>
+
+    <div class="actions">
+      <span class="like" onclick="like(this)">❤️ 0</span>
+      <a href="${src}" download>Save</a>
+      <button onclick="shareImage('${src}')">Share</button>
+    </div>
+  `;
+
+  gallery.appendChild(box);
+});
+
+function like(el) {
+  let count = parseInt(el.innerText.split(" ")[1]);
+  count++;
+  el.innerText = "❤️ " + count;
 }
 
 function shareImage(src) {
@@ -194,21 +132,5 @@ function closeImage() {
   document.getElementById("popup").style.display = "none";
 }
 
-// LIKE BUTTON
-function like(el) {
-  let count = parseInt(el.innerText.split(" ")[1]);
-  count++;
-  el.innerText = "❤️ " + count;
-}
-
-// COMMENT ADD
-function addComment(e, input) {
-  if (e.key === "Enter" && input.value.trim() !== "") {
-    let div = document.createElement("div");
-    div.innerText = input.value;
-    input.nextElementSibling.appendChild(div);
-    input.value = "";
-  }
-}
 </script></body>
-    </html>
+</html>
