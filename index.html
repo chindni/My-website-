@@ -14,24 +14,22 @@ h1 {
   text-align: center;
 }
 
-/* Gallery */
+/* ✅ GRID (2 line layout) */
 .gallery {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 1 row me 4 photo */
   gap: 15px;
   padding: 20px;
-  overflow-x: auto;
 }
 
 /* Image box */
 .img-box {
   text-align: center;
-  min-width: 200px;
 }
 
 /* Image */
 .img-box img {
-  width: 200px;
+  width: 100%;
   height: 150px;
   object-fit: cover;
   border-radius: 10px;
@@ -91,20 +89,17 @@ h1 {
 
 <script>
 
-// 🔥 ALL PHOTOS HERE (EDIT HERE ONLY)
 let images = [
   "IMG-20260325-WA0003.jpg",
   "IMG-20260325-WA0007.jpg",
   "IMG-20260325-WA0008.jpg",
   "IMG-20260325-WA0010.jpg",
-
   "lv_0_20260219200139.jpg",
   "Snapchat-1316453477.jpg",
   "IMG_20260318_095656_509.jpg",
   "Snapchat-1816127803.jpg"
 ];
 
-// AUTO GALLERY
 let gallery = document.getElementById("gallery");
 
 images.forEach((src) => {
@@ -129,14 +124,12 @@ images.forEach((src) => {
   gallery.appendChild(box);
 });
 
-// Like
 function like(el) {
   let count = parseInt(el.innerText.split(" ")[1]);
   count++;
   el.innerText = "❤️ " + count;
 }
 
-// Share
 function shareImage(src) {
   if (navigator.share) {
     navigator.share({ title: "Check", url: src });
@@ -145,7 +138,6 @@ function shareImage(src) {
   }
 }
 
-// Fullscreen
 function openImage(src) {
   document.getElementById("popup").style.display = "flex";
   document.getElementById("popupImg").src = src;
@@ -155,7 +147,6 @@ function closeImage() {
   document.getElementById("popup").style.display = "none";
 }
 
-// Comment
 function addComment(e, input) {
   if (e.key === "Enter" && input.value !== "") {
     let div = document.createElement("div");
