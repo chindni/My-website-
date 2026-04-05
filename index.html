@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>My Instagram Style Gallery</title>
+<title>My Insta Gallery</title>
 
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background: #fafafa;
 }
 
-/* Header */
 .header {
   background: white;
-  padding: 10px;
+  padding: 12px;
   text-align: center;
   font-weight: bold;
   border-bottom: 1px solid #ddd;
 }
 
-/* Grid */
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -27,28 +25,24 @@ body {
   padding: 15px;
 }
 
-/* Card */
 .card {
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }
 
-/* Image */
-.card img {
+.card img, .card video {
   width: 100%;
   height: 250px;
   object-fit: cover;
   cursor: pointer;
 }
 
-/* Actions */
 .actions {
   display: flex;
   justify-content: space-between;
-  padding: 8px;
-  font-size: 14px;
+  padding: 10px;
 }
 
 .like {
@@ -56,18 +50,16 @@ body {
   cursor: pointer;
 }
 
-/* Comment */
 .comment-box {
   padding: 5px;
 }
 
 .comment-box input {
   width: 100%;
-  padding: 5px;
+  padding: 6px;
   border: 1px solid #ddd;
 }
 
-/* Popup */
 #popup {
   display: none;
   position: fixed;
@@ -80,7 +72,7 @@ body {
   align-items: center;
 }
 
-#popup img {
+#popup img, #popup video {
   max-width: 90%;
   max-height: 90%;
 }
@@ -90,45 +82,54 @@ body {
 
 <body>
 
-<div class="header">My Gallery 📸</div>
+<div class="header">My Gallery 📸🎥</div>
 
 <div class="gallery" id="gallery"></div>
 
-<div id="popup" onclick="closeImage()">
-<img id="popupImg">
-</div>
+<div id="popup" onclick="closePopup()"></div>
 
 <script>
 
-// 🔥 Photos yahan add karo
-let images = [
-  "IMG-20260325-WA0003.jpg",
-  "IMG-20260325-WA0007.jpg",
-  "IMG-20260325-WA0008.jpg",
-  "IMG-20260325-WA0010.jpg",
-  "lv_0_20260219200139.jpg",
-  "Snapchat-1316453477.jpg",
-  "IMG_20260318_095656_509.jpg",
-  "Snapchat-1816127803.jpg"
+// 🔥 UPDATED MEDIA (TUMHARE VIDEO ADD KIYE)
+let media = [
+  {type:"img", src:"IMG-20260325-WA0003.jpg"},
+  {type:"img", src:"IMG-20260325-WA0007.jpg"},
+  {type:"img", src:"IMG-20260325-WA0008.jpg"},
+  {type:"img", src:"IMG-20260325-WA0010.jpg"},
+
+  {type:"video", src:"video1.mp4"},
+  {type:"video", src:"video2.mp4"},
+
+  // ✅ NEW VIDEOS
+  {type:"video", src:"VID_20260405_032449_956.mp4"},
+  {type:"video", src:"VID_20260405_032525_010.mp4"}
 ];
 
 let gallery = document.getElementById("gallery");
 
-images.forEach((src) => {
+media.forEach((item) => {
   let card = document.createElement("div");
   card.className = "card";
 
+  let mediaTag = "";
+
+  if(item.type === "img"){
+    mediaTag = `<img src="${item.src}" onclick="openPopup('img','${item.src}')">`;
+  } else {
+    mediaTag = `<video src="${item.src}" onclick="openPopup('video','${item.src}')"></video>`;
+  }
+
   card.innerHTML = `
-    <img src="${src}" onclick="openImage('${src}')">
+    ${mediaTag}
 
     <div class="actions">
       <span class="like" onclick="like(this)">❤️ 0</span>
-      <span onclick="shareImage('${src}')">🔗 Share</span>
-      <a href="${src}" download>💾 Save</a>
+      <span onclick="shareMedia('${item.src}')">🔗</span>
+      <a href="${item.src}" download>💾</a>
     </div>
 
     <div class="comment-box">
-      <input type="text" placeholder="Add a comment..." onkeydown="addComment(event,this)">
+      <input type="text" placeholder="Add comment..." onkeydown="addComment(event,this)">
       <div></div>
     </div>
   `;
@@ -144,7 +145,7 @@ function like(el) {
 }
 
 // Share
-function shareImage(src) {
+function shareMedia(src) {
   if (navigator.share) {
     navigator.share({ title: "Check this", url: src });
   } else {
@@ -152,13 +153,20 @@ function shareImage(src) {
   }
 }
 
-// Fullscreen
-function openImage(src) {
-  document.getElementById("popup").style.display = "flex";
-  document.getElementById("popupImg").src = src;
+// Popup open
+function openPopup(type, src) {
+  let popup = document.getElementById("popup");
+  popup.style.display = "flex";
+
+  if(type === "img"){
+    popup.innerHTML = `<img src="${src}">`;
+  } else {
+    popup.innerHTML = `<video src="${src}" controls autoplay></video>`;
+  }
 }
 
-function closeImage() {
+// Close popup
+function closePopup() {
   document.getElementById("popup").style.display = "none";
 }
 
