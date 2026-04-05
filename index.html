@@ -90,27 +90,27 @@ body {
 
 <script>
 
-// ✅ FINAL MEDIA LIST
+// ✅ FINAL MEDIA LIST (ALL FIXED)
 let media = [
-  // OLD IMAGES
+  // JPG IMAGES
   {type:"img", src:"IMG-20260325-WA0003.jpg"},
   {type:"img", src:"IMG-20260325-WA0007.jpg"},
   {type:"img", src:"IMG-20260325-WA0008.jpg"},
   {type:"img", src:"IMG-20260325-WA0010.jpg"},
 
-  // NEW JPEG IMAGES
-  {type:"img", src:"b0ab30ef-4a70-49a9-8db3-26a9d1373d61(1).jpeg"},
-  {type:"img", src:"b5dc81ae-fa46-4e6a-b496-620dec8c57e2(2).jpeg"},
-  {type:"img", src:"645bdc3e-ed86-4d26-8cf7-93bf7b220dfaf(3).jpeg"},
-  {type:"img", src:"93b344b-843e-440e-b9ef-123d67e992937(4).jpeg"},
-  {type:"img", src:"5390d2c-4047-4291-85a4-6a5de725572b0(5).jpeg"},
-  {type:"img", src:"4aaf214-597b-433c-8f85-82669eacd1278(6).jpeg"},
-  {type:"img", src:"7849f90-107f-4992-aa84-9acf62ef275c1c(7).jpeg"},
-  {type:"img", src:"afceca-e76f-482f-afd5-48165b23da48e15(8).jpeg"},
-  {type:"img", src:"7dcb4-ea9b-47c1-b1e6-60edc7da2aa85b2(9).jpeg"},
-  {type:"img", src:"6c0e9-7fe0-4b04-9fca-07edb1504e012a3c(10).jpeg"},
-  {type:"img", src:"1dfc-e015-4dc0-953b-2b6d4060bf3dc392e(11).jpeg"},
-  {type:"img", src:"24d-697c-46d8-ab53-2b4763df3159(12).jpeg"},
+  // JPEG IMAGES (NO (1)(2) ERROR)
+  {type:"img", src:"b0ab30ef-4a70-49a9-8db3-26a9d1373d61.jpeg"},
+  {type:"img", src:"b5dc81ae-fa46-4e6a-b496-620dec8c57e2.jpeg"},
+  {type:"img", src:"645bdc3e-ed86-4d26-8cf7-93bf7b220dfaf.jpeg"},
+  {type:"img", src:"93b344b-843e-440e-b9ef-123d67e992937.jpeg"},
+  {type:"img", src:"5390d2c-4047-4291-85a4-6a5de725572b0.jpeg"},
+  {type:"img", src:"4aaf214-597b-433c-8f85-82669eacd1278.jpeg"},
+  {type:"img", src:"7849f90-107f-4992-aa84-9acf62ef275c1c.jpeg"},
+  {type:"img", src:"afceca-e76f-482f-afd5-48165b23da48e15.jpeg"},
+  {type:"img", src:"7dcb4-ea9b-47c1-b1e6-60edc7da2aa85b2.jpeg"},
+  {type:"img", src:"6c0e9-7fe0-4b04-9fca-07edb1504e012a3c.jpeg"},
+  {type:"img", src:"1dfc-e015-4dc0-953b-2b6d4060bf3dc392e.jpeg"},
+  {type:"img", src:"24d-697c-46d8-ab53-2b4763df3159.jpeg"},
 
   // VIDEOS
   {type:"video", src:"video1.mp4"},
@@ -135,13 +135,11 @@ media.forEach((item) => {
 
   card.innerHTML = `
     ${mediaTag}
-
     <div class="actions">
       <span class="like" onclick="like(this)">❤️ 0</span>
       <span onclick="shareMedia('${item.src}')">🔗</span>
       <a href="${item.src}" download>💾</a>
     </div>
-
     <div class="comment-box">
       <input type="text" placeholder="Add comment..." onkeydown="addComment(event,this)">
       <div></div>
@@ -167,7 +165,7 @@ function shareMedia(src) {
   }
 }
 
-// 🔍 Popup open
+// 🔍 Popup
 function openPopup(type, src) {
   let popup = document.getElementById("popup");
   popup.style.display = "flex";
@@ -179,7 +177,7 @@ function openPopup(type, src) {
   }
 }
 
-// ❌ Close popup
+// ❌ Close
 function closePopup() {
   document.getElementById("popup").style.display = "none";
 }
