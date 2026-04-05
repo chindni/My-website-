@@ -1,174 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>My Website</title>
+<title>My App</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
 
 <style>
-body {
-  background: white;
-  font-family: Arial;
-  margin: 0;
-}
+body { font-family: Arial; margin:0; }
 
-h1 {
-  text-align: center;
-}
+#login, #app { padding:20px; }
 
-/* GRID layout */
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  padding: 20px;
+  column-count: 2;
 }
 
-.img-box {
-  text-align: center;
-}
-
-.img-box img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 5px;
-}
-
-.like {
-  color: red;
-  cursor: pointer;
-}
-
-.comment-box input {
-  width: 100%;
-  padding: 5px;
-  margin-top: 5px;
-}
-
-/* Popup */
-#popup {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.9);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-#popup img {
-  max-width: 100%;
-  max-height: 100%;
+img {
+  width:100%;
+  margin-bottom:10px;
+  border-radius:10px;
 }
 </style>
-
 </head>
 
 <body>
 
-<h1>My Photo Gallery 📸</h1>
+<!-- LOGIN -->
+<div id="login">
+  <h2>Login / Signup</h2>
+  <input id="email" placeholder="Email"><br>
+  <input id="pass" type="password" placeholder="Password"><br>
+  <button onclick="signup()">Signup</button>
+  <button onclick="login()">Login</button>
+</div>
 
-<div class="gallery" id="gallery"></div>
-
-<div id="popup" onclick="closeImage()">
-<img id="popupImg">
+<!-- APP -->
+<div id="app" style="display:none;">
+  <button onclick="logout()">Logout</button>
+  <input type="file" onchange="upload(event)">
+  <div class="gallery" id="gallery"></div>
 </div>
 
 <script>
 
-// 🔥 UPDATED ALL PHOTOS
-let images = [
-  "IMG-20260325-WA0003.jpg",
-  "IMG-20260325-WA0007.jpg",
-  "IMG-20260325-WA0008.jpg",
-  "IMG-20260325-WA0010.jpg",
-  "lv_0_20260219200139.jpg",
-  "Snapchat-1316453477.jpg",
-  "IMG_20260318_095656_509.jpg",
-  "Snapchat-1816127803.jpg",
+// 🔥 PASTE YOUR FIREBASE CONFIG HERE
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_ID",
+  storageBucket: "YOUR_BUCKET",
+};
 
-  "b0ab30ef-4a70-49a9-8db3-26a9d1373d61.jpg",
-  "b5dc81ae-fa46-4e6a-b496-620dec8c57e2.jpg",
-  "645bdc3e-ed86-4d26-8cf7-93bf7b220dfa.jpg",
-  "f93b344b-843e-440e-b9ef-123d67e99293.jpg",
-  "75390d2c-4047-4291-85a4-6a5de725572b.jpg",
-  "04aaf214-597b-433c-8f85-82669eacd127.jpg",
-  "87849f90-107f-4992-aa84-9acf62ef275c.jpg",
-  "1cafceca-e76f-482f-afd5-48165b23da48.jpg",
-  "e157dcb4-ea9b-47c1-b1e6-60edc7da2aa8.jpg",
-  "5b26c0e9-7fe0-4b04-9fca-07edb1504e01.jpg",
-  "2a3c1dfc-e015-4dc0-953b-2b6d4060bf3d.jpg",
-  "c392e24d-697c-46d8-ab53-2b4763df3159.jpg"
-];
+firebase.initializeApp(firebaseConfig);
 
-let gallery = document.getElementById("gallery");
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
 
-images.forEach((src) => {
-  let box = document.createElement("div");
-  box.className = "img-box";
-
-  box.innerHTML = `
-    <img src="${src}" onclick="openImage('${src}')">
-    
-    <div class="actions">
-      <span class="like" onclick="like(this)">❤️ 0</span>
-      <a href="${src}" download>Save</a>
-      <button onclick="shareImage('${src}')">Share</button>
-    </div>
-
-    <div class="comment-box">
-      <input type="text" placeholder="Comment..." onkeydown="addComment(event,this)">
-      <div></div>
-    </div>
-  `;
-
-  gallery.appendChild(box);
-});
-
-// Like
-function like(el) {
-  let count = parseInt(el.innerText.split(" ")[1]);
-  count++;
-  el.innerText = "❤️ " + count;
+// Signup
+function signup(){
+  auth.createUserWithEmailAndPassword(
+    email.value, pass.value
+  );
 }
 
-// Share
-function shareImage(src) {
-  if (navigator.share) {
-    navigator.share({ title: "Check", url: src });
+// Login
+function login(){
+  auth.signInWithEmailAndPassword(
+    email.value, pass.value
+  );
+}
+
+// Logout
+function logout(){
+  auth.signOut();
+}
+
+// Upload photo
+function upload(e){
+  let file = e.target.files[0];
+  let ref = storage.ref("images/" + file.name);
+
+  ref.put(file).then(()=>{
+    ref.getDownloadURL().then(url=>{
+      db.collection("photos").add({url});
+    });
+  });
+}
+
+// Show photos
+auth.onAuthStateChanged(user=>{
+  if(user){
+    login.style.display="none";
+    app.style.display="block";
+
+    db.collection("photos").onSnapshot(snap=>{
+      gallery.innerHTML="";
+      snap.forEach(doc=>{
+        let img=document.createElement("img");
+        img.src=doc.data().url;
+        gallery.appendChild(img);
+      });
+    });
+
   } else {
-    alert("Share not supported");
+    login.style.display="block";
+    app.style.display="none";
   }
-}
-
-// Fullscreen
-function openImage(src) {
-  document.getElementById("popup").style.display = "flex";
-  document.getElementById("popupImg").src = src;
-}
-
-function closeImage() {
-  document.getElementById("popup").style.display = "none";
-}
-
-// Comment
-function addComment(e, input) {
-  if (e.key === "Enter" && input.value !== "") {
-    let div = document.createElement("div");
-    div.innerText = input.value;
-    input.nextElementSibling.appendChild(div);
-    input.value = "";
-  }
-}
+});
 
 </script>
 
