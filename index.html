@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>My App</title>
+<title>My App Pro</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
@@ -9,12 +9,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js"></script>
 
 <style>
-body {
-  margin:0;
-  font-family: Arial;
-}
+body { margin:0; font-family: Arial; }
 
-/* 🔐 CENTER LOGIN */
+/* LOGIN */
 #login {
   display:flex;
   flex-direction:column;
@@ -29,10 +26,26 @@ input, button {
   width:220px;
 }
 
-/* 📱 APP */
-#app {
-  display:none;
-  padding:10px;
+/* APP */
+#app { display:none; padding:10px; }
+
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* Profile */
+.profile {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.profile img {
+  width:40px;
+  height:40px;
+  border-radius:50%;
 }
 
 /* Gallery */
@@ -40,10 +53,35 @@ input, button {
   column-count: 2;
 }
 
-img {
-  width:100%;
+.post {
   margin-bottom:10px;
+}
+
+.post img {
+  width:100%;
   border-radius:10px;
+}
+
+/* Actions */
+.actions {
+  display:flex;
+  justify-content:space-between;
+}
+
+.like {
+  color:red;
+  cursor:pointer;
+}
+
+/* Comment */
+.comment-box input {
+  width:100%;
+  padding:5px;
+}
+
+/* Comment list */
+.comments {
+  font-size:12px;
 }
 </style>
 </head>
@@ -52,23 +90,42 @@ img {
 
 <!-- LOGIN -->
 <div id="login">
-  <h2>Login / Signup</h2>
+  <h2>Signup / Login</h2>
+  <input id="username" placeholder="Username">
   <input id="email" placeholder="Email">
   <input id="pass" type="password" placeholder="Password">
   <button onclick="signup()">Signup</button>
   <button onclick="loginUser()">Login</button>
+  <p id="error"></p>
 </div>
 
 <!-- APP -->
 <div id="app">
+
+<div class="topbar">
+  <div class="profile">
+    <img id="dp" src="https://via.placeholder.com/40">
+    <span id="userName"></span>
+  </div>
   <button onclick="logout()">Logout</button>
-  <input type="file" onchange="upload(event)">
-  <div class="gallery" id="gallery"></div>
+</div>
+
+<br>
+
+<!-- Upload DP -->
+<input type="file" onchange="uploadDP(event)">
+<br><br>
+
+<!-- Upload Post -->
+<input type="file" onchange="uploadPost(event)">
+
+<div class="gallery" id="gallery"></div>
+
 </div>
 
 <script>
 
-// 🔥 Firebase config yaha paste karo
+// 🔥 Firebase config
 const firebaseConfig = {
   apiKey: "YOUR_KEY",
   authDomain: "YOUR_DOMAIN",
@@ -82,22 +139,21 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// ✅ Signup FIX
+// Signup
 function signup(){
-  auth.createUserWithEmailAndPassword(
-    document.getElementById("email").value,
-    document.getElementById("pass").value
-  ).then(()=>{
-    alert("Account created");
-  }).catch(e=>alert(e.message));
+  auth.createUserWithEmailAndPassword(email.value, pass.value)
+  .then(res=>{
+    db.collection("users").doc(res.user.uid).set({
+      username: username.value,
+      dp: ""
+    });
+  }).catch(e=>error.innerText=e.message);
 }
 
-// ✅ Login FIX
+// Login
 function loginUser(){
-  auth.signInWithEmailAndPassword(
-    document.getElementById("email").value,
-    document.getElementById("pass").value
-  ).catch(e=>alert(e.message));
+  auth.signInWithEmailAndPassword(email.value, pass.value)
+  .catch(e=>error.innerText="Wrong login");
 }
 
 // Logout
@@ -105,60 +161,109 @@ function logout(){
   auth.signOut();
 }
 
-// 📸 Upload
-function upload(e){
+// Upload DP
+function uploadDP(e){
   let file = e.target.files[0];
-  let ref = storage.ref("images/" + file.name);
+  let ref = storage.ref("dp/"+auth.currentUser.uid);
 
   ref.put(file).then(()=>{
     ref.getDownloadURL().then(url=>{
-      db.collection("photos").add({url});
+      db.collection("users").doc(auth.currentUser.uid).update({dp:url});
     });
   });
 }
 
-// 🌄 Default Photos (auto show)
-let defaultPhotos = [
-  "https://picsum.photos/300/400?random=1",
-  "https://picsum.photos/300/500?random=2",
-  "https://picsum.photos/300/450?random=3",
-  "https://picsum.photos/300/470?random=4",
-  "https://picsum.photos/300/420?random=5",
-  "https://picsum.photos/300/480?random=6",
-  "https://picsum.photos/300/430?random=7",
-  "https://picsum.photos/300/460?random=8"
-];
+// Upload Post
+function uploadPost(e){
+  let file = e.target.files[0];
+  let ref = storage.ref("posts/"+file.name);
 
-// 🔄 Auth state
+  ref.put(file).then(()=>{
+    ref.getDownloadURL().then(url=>{
+      db.collection("posts").add({
+        url: url,
+        likes: 0,
+        comments: []
+      });
+    });
+  });
+}
+
+// Load Data
 auth.onAuthStateChanged(user=>{
   if(user){
-    document.getElementById("login").style.display="none";
-    document.getElementById("app").style.display="block";
+    login.style.display="none";
+    app.style.display="block";
 
-    // 🟢 Default photos show
-    gallery.innerHTML="";
-    defaultPhotos.forEach(url=>{
-      let img=document.createElement("img");
-      img.src=url;
-      gallery.appendChild(img);
+    db.collection("users").doc(user.uid).get().then(doc=>{
+      userName.innerText = doc.data().username;
+      if(doc.data().dp){
+        dp.src = doc.data().dp;
+      }
     });
 
-    // 🔥 Firebase photos bhi show
-    db.collection("photos").onSnapshot(snap=>{
+    db.collection("posts").onSnapshot(snap=>{
+      gallery.innerHTML="";
+
       snap.forEach(doc=>{
-        let img=document.createElement("img");
-        img.src=doc.data().url;
-        gallery.appendChild(img);
+        let data = doc.data();
+
+        let div = document.createElement("div");
+        div.className="post";
+
+        div.innerHTML = `
+          <img src="${data.url}">
+          
+          <div class="actions">
+            <span class="like" onclick="like('${doc.id}', this)">❤️ ${data.likes}</span>
+          </div>
+
+          <div class="comments">
+            ${data.comments.map(c=>"<div>"+c+"</div>").join("")}
+          </div>
+
+          <div class="comment-box">
+            <input placeholder="Comment..." 
+            onkeydown="comment(event,'${doc.id}', this)">
+          </div>
+        `;
+
+        gallery.appendChild(div);
       });
     });
 
   } else {
-    document.getElementById("login").style.display="flex";
-    document.getElementById("app").style.display="none";
+    login.style.display="flex";
+    app.style.display="none";
   }
 });
+
+// Like
+function like(id, el){
+  let count = parseInt(el.innerText.split(" ")[1]) + 1;
+
+  db.collection("posts").doc(id).update({
+    likes: count
+  });
+}
+
+// Comment
+function comment(e,id,input){
+  if(e.key==="Enter" && input.value){
+    db.collection("posts").doc(id).get().then(doc=>{
+      let arr = doc.data().comments || [];
+      arr.push(input.value);
+
+      db.collection("posts").doc(id).update({
+        comments: arr
+      });
+
+      input.value="";
+    });
+  }
+}
 
 </script>
 
 </body>
-</html>
+  </html>
