@@ -14,20 +14,18 @@ h1 {
   text-align: center;
 }
 
-/* ✅ GRID (2 line layout) */
+/* GRID layout */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 1 row me 4 photo */
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
   padding: 20px;
 }
 
-/* Image box */
 .img-box {
   text-align: center;
 }
 
-/* Image */
 .img-box img {
   width: 100%;
   height: 150px;
@@ -36,7 +34,6 @@ h1 {
   cursor: pointer;
 }
 
-/* Actions */
 .actions {
   display: flex;
   justify-content: space-between;
@@ -48,7 +45,6 @@ h1 {
   cursor: pointer;
 }
 
-/* Comment */
 .comment-box input {
   width: 100%;
   padding: 5px;
@@ -89,6 +85,7 @@ h1 {
 
 <script>
 
+// 🔥 UPDATED ALL PHOTOS
 let images = [
   "IMG-20260325-WA0003.jpg",
   "IMG-20260325-WA0007.jpg",
@@ -97,7 +94,20 @@ let images = [
   "lv_0_20260219200139.jpg",
   "Snapchat-1316453477.jpg",
   "IMG_20260318_095656_509.jpg",
-  "Snapchat-1816127803.jpg"
+  "Snapchat-1816127803.jpg",
+
+  "b0ab30ef-4a70-49a9-8db3-26a9d1373d61.jpg",
+  "b5dc81ae-fa46-4e6a-b496-620dec8c57e2.jpg",
+  "645bdc3e-ed86-4d26-8cf7-93bf7b220dfa.jpg",
+  "f93b344b-843e-440e-b9ef-123d67e99293.jpg",
+  "75390d2c-4047-4291-85a4-6a5de725572b.jpg",
+  "04aaf214-597b-433c-8f85-82669eacd127.jpg",
+  "87849f90-107f-4992-aa84-9acf62ef275c.jpg",
+  "1cafceca-e76f-482f-afd5-48165b23da48.jpg",
+  "e157dcb4-ea9b-47c1-b1e6-60edc7da2aa8.jpg",
+  "5b26c0e9-7fe0-4b04-9fca-07edb1504e01.jpg",
+  "2a3c1dfc-e015-4dc0-953b-2b6d4060bf3d.jpg",
+  "c392e24d-697c-46d8-ab53-2b4763df3159.jpg"
 ];
 
 let gallery = document.getElementById("gallery");
@@ -124,12 +134,14 @@ images.forEach((src) => {
   gallery.appendChild(box);
 });
 
+// Like
 function like(el) {
   let count = parseInt(el.innerText.split(" ")[1]);
   count++;
   el.innerText = "❤️ " + count;
 }
 
+// Share
 function shareImage(src) {
   if (navigator.share) {
     navigator.share({ title: "Check", url: src });
@@ -138,6 +150,7 @@ function shareImage(src) {
   }
 }
 
+// Fullscreen
 function openImage(src) {
   document.getElementById("popup").style.display = "flex";
   document.getElementById("popupImg").src = src;
@@ -147,6 +160,7 @@ function closeImage() {
   document.getElementById("popup").style.display = "none";
 }
 
+// Comment
 function addComment(e, input) {
   if (e.key === "Enter" && input.value !== "") {
     let div = document.createElement("div");
