@@ -87,6 +87,11 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+#popup img, #popup video {
+  max-width: 90%;
+  max-height: 90%;
+}
 </style>
 
 </head>
@@ -95,11 +100,10 @@ body {
 
 <div class="header">My Gallery 📸🎥</div>
 
-<!-- ✅ FILTER BUTTON -->
 <div class="filter">
-  <button onclick="filterMedia('all')" class="active">All</button>
-  <button onclick="filterMedia('img')">Photos</button>
-  <button onclick="filterMedia('video')">Videos</button>
+  <button onclick="filterMedia('all',this)" class="active">All</button>
+  <button onclick="filterMedia('img',this)">Photos</button>
+  <button onclick="filterMedia('video',this)">Videos</button>
 </div>
 
 <div class="gallery" id="gallery"></div>
@@ -107,17 +111,15 @@ body {
 
 <script>
 
-// ✅ ALL MEDIA (tumhare sab photos add kiye)
+// ✅ PHOTOS + VIDEOS BOTH
 let media = [
 
-  // 🔥 PHOTOS
+  // 📸 PHOTOS
   {type:"img", src:"IMG-20251227-WA0004.jpg"},
   {type:"img", src:"IMG-20251226-WA0002.jpg"},
   {type:"img", src:"IMG_20251202_123902_970.jpg"},
   {type:"img", src:"IMG_20251202_123956_839.jpg"},
-  {type:"img", src:"Snapchat-1698648041.jpg"},
   {type:"img", src:"IMG-20250717-WA0006.jpg"},
-  
   {type:"img", src:"IMG-20250717-WA0023.jpg"},
   {type:"img", src:"IMG-20250717-WA0029.jpg"},
   {type:"img", src:"IMG-20250721-WA0004(1).jpg"},
@@ -128,9 +130,7 @@ let media = [
   {type:"img", src:"IMG-20250721-WA0004.jpg"},
   {type:"img", src:"IMG-20250228-WA0002.jpg"},
 
-  // 🎥 VIDEOS
-  {type:"video", src:"video1.mp4"},
-  {type:"video", src:"video2.mp4"},
+  // 🎥 VIDEOS (तुम्हारे वापस add किए)
   {type:"video", src:"VID_20260405_032449_956.mp4"},
   {type:"video", src:"VID_20260405_032525_010.mp4"}
 ];
@@ -157,6 +157,8 @@ function showMedia(type="all") {
 
       <div class="actions">
         <span class="like" onclick="like(this)">❤️ 0</span>
+        <span onclick="shareMedia('${item.src}')">🔗</span>
+        <a href="${item.src}" download>💾</a>
       </div>
 
       <div class="comment-box">
@@ -169,20 +171,29 @@ function showMedia(type="all") {
   });
 }
 
-// ✅ FILTER FUNCTION
-function filterMedia(type) {
-  document.querySelectorAll(".filter button").forEach(btn => btn.classList.remove("active"));
-  event.target.classList.add("active");
+// FILTER
+function filterMedia(type, btn) {
+  document.querySelectorAll(".filter button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
   showMedia(type);
 }
 
-// Like
+// LIKE
 function like(el) {
   let count = parseInt(el.innerText.split(" ")[1]);
   el.innerText = "❤️ " + (count + 1);
 }
 
-// Popup
+// SHARE
+function shareMedia(src) {
+  if (navigator.share) {
+    navigator.share({ title: "Check this", url: src });
+  } else {
+    alert("Share not supported");
+  }
+}
+
+// POPUP
 function openPopup(type, src) {
   let popup = document.getElementById("popup");
   popup.style.display = "flex";
@@ -196,7 +207,7 @@ function closePopup() {
   document.getElementById("popup").style.display = "none";
 }
 
-// Comment
+// COMMENT
 function addComment(e, input) {
   if (e.key === "Enter" && input.value !== "") {
     let div = document.createElement("div");
@@ -206,10 +217,10 @@ function addComment(e, input) {
   }
 }
 
-// 🔥 DEFAULT LOAD
+// LOAD
 showMedia();
 
 </script>
 
 </body>
-</html>
+  </html>
