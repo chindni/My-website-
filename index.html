@@ -18,6 +18,26 @@ body {
   border-bottom: 1px solid #ddd;
 }
 
+.filter {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.filter button {
+  padding: 8px 15px;
+  border: none;
+  background: #eee;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.filter button.active {
+  background: black;
+  color: white;
+}
+
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -50,10 +70,6 @@ body {
   cursor: pointer;
 }
 
-.comment-box {
-  padding: 5px;
-}
-
 .comment-box input {
   width: 100%;
   padding: 6px;
@@ -71,11 +87,6 @@ body {
   justify-content: center;
   align-items: center;
 }
-
-#popup img, #popup video {
-  max-width: 90%;
-  max-height: 90%;
-}
 </style>
 
 </head>
@@ -84,35 +95,39 @@ body {
 
 <div class="header">My Gallery 📸🎥</div>
 
-<div class="gallery" id="gallery"></div>
+<!-- ✅ FILTER BUTTON -->
+<div class="filter">
+  <button onclick="filterMedia('all')" class="active">All</button>
+  <button onclick="filterMedia('img')">Photos</button>
+  <button onclick="filterMedia('video')">Videos</button>
+</div>
 
+<div class="gallery" id="gallery"></div>
 <div id="popup" onclick="closePopup()"></div>
 
 <script>
 
-// ✅ FINAL MEDIA LIST (ALL FIXED)
+// ✅ ALL MEDIA (tumhare sab photos add kiye)
 let media = [
-  // JPG IMAGES
-  {type:"img", src:"IMG-20260325-WA0003.jpg"},
-  {type:"img", src:"IMG-20260325-WA0007.jpg"},
-  {type:"img", src:"IMG-20260325-WA0008.jpg"},
-  {type:"img", src:"IMG-20260325-WA0010.jpg"},
 
-  // JPEG IMAGES (NO (1)(2) ERROR)
-  {type:"img", src:"b0ab30ef-4a70-49a9-8db3-26a9d1373d61.jpeg"},
-  {type:"img", src:"b5dc81ae-fa46-4e6a-b496-620dec8c57e2.jpeg"},
-  {type:"img", src:"645bdc3e-ed86-4d26-8cf7-93bf7b220dfaf.jpeg"},
-  {type:"img", src:"93b344b-843e-440e-b9ef-123d67e992937.jpeg"},
-  {type:"img", src:"5390d2c-4047-4291-85a4-6a5de725572b0.jpeg"},
-  {type:"img", src:"4aaf214-597b-433c-8f85-82669eacd1278.jpeg"},
-  {type:"img", src:"7849f90-107f-4992-aa84-9acf62ef275c1c.jpeg"},
-  {type:"img", src:"afceca-e76f-482f-afd5-48165b23da48e15.jpeg"},
-  {type:"img", src:"7dcb4-ea9b-47c1-b1e6-60edc7da2aa85b2.jpeg"},
-  {type:"img", src:"6c0e9-7fe0-4b04-9fca-07edb1504e012a3c.jpeg"},
-  {type:"img", src:"1dfc-e015-4dc0-953b-2b6d4060bf3dc392e.jpeg"},
-  {type:"img", src:"24d-697c-46d8-ab53-2b4763df3159.jpeg"},
+  // 🔥 PHOTOS
+  {type:"img", src:"IMG-20251227-WA0004.jpg"},
+  {type:"img", src:"IMG-20251226-WA0002.jpg"},
+  {type:"img", src:"IMG_20251202_123902_970.jpg"},
+  {type:"img", src:"IMG_20251202_123956_839.jpg"},
+  {type:"img", src:"Snapchat-1698648041.jpg"},
+  {type:"img", src:"IMG-20250717-WA0006.jpg"},
+  {type:"img", src:"IMG-20250717-WA0023.jpg"},
+  {type:"img", src:"IMG-20250717-WA0029.jpg"},
+  {type:"img", src:"IMG-20250721-WA0004(1).jpg"},
+  {type:"img", src:"IMG-20250721-WA0026.jpg"},
+  {type:"img", src:"IMG-20250721-WA0028.jpg"},
+  {type:"img", src:"IMG-20250721-WA0032.jpg"},
+  {type:"img", src:"IMG-20250721-WA0036.jpg"},
+  {type:"img", src:"IMG-20250721-WA0004.jpg"},
+  {type:"img", src:"IMG-20250228-WA0002.jpg"},
 
-  // VIDEOS
+  // 🎥 VIDEOS
   {type:"video", src:"video1.mp4"},
   {type:"video", src:"video2.mp4"},
   {type:"video", src:"VID_20260405_032449_956.mp4"},
@@ -121,68 +136,66 @@ let media = [
 
 let gallery = document.getElementById("gallery");
 
-media.forEach((item) => {
-  let card = document.createElement("div");
-  card.className = "card";
+// ✅ SHOW MEDIA
+function showMedia(type="all") {
+  gallery.innerHTML = "";
 
-  let mediaTag = "";
+  media.forEach((item) => {
 
-  if(item.type === "img"){
-    mediaTag = `<img src="${item.src}" onclick="openPopup('img','${item.src}')">`;
-  } else {
-    mediaTag = `<video src="${item.src}" onclick="openPopup('video','${item.src}')"></video>`;
-  }
+    if(type !== "all" && item.type !== type) return;
 
-  card.innerHTML = `
-    ${mediaTag}
-    <div class="actions">
-      <span class="like" onclick="like(this)">❤️ 0</span>
-      <span onclick="shareMedia('${item.src}')">🔗</span>
-      <a href="${item.src}" download>💾</a>
-    </div>
-    <div class="comment-box">
-      <input type="text" placeholder="Add comment..." onkeydown="addComment(event,this)">
-      <div></div>
-    </div>
-  `;
+    let card = document.createElement("div");
+    card.className = "card";
 
-  gallery.appendChild(card);
-});
+    let mediaTag = item.type === "img"
+      ? `<img src="${item.src}" onclick="openPopup('img','${item.src}')">`
+      : `<video src="${item.src}" onclick="openPopup('video','${item.src}')"></video>`;
 
-// ❤️ Like
+    card.innerHTML = `
+      ${mediaTag}
+
+      <div class="actions">
+        <span class="like" onclick="like(this)">❤️ 0</span>
+      </div>
+
+      <div class="comment-box">
+        <input type="text" placeholder="Add comment..." onkeydown="addComment(event,this)">
+        <div></div>
+      </div>
+    `;
+
+    gallery.appendChild(card);
+  });
+}
+
+// ✅ FILTER FUNCTION
+function filterMedia(type) {
+  document.querySelectorAll(".filter button").forEach(btn => btn.classList.remove("active"));
+  event.target.classList.add("active");
+  showMedia(type);
+}
+
+// Like
 function like(el) {
   let count = parseInt(el.innerText.split(" ")[1]);
-  count++;
-  el.innerText = "❤️ " + count;
+  el.innerText = "❤️ " + (count + 1);
 }
 
-// 🔗 Share
-function shareMedia(src) {
-  if (navigator.share) {
-    navigator.share({ title: "Check this", url: src });
-  } else {
-    alert("Share not supported");
-  }
-}
-
-// 🔍 Popup
+// Popup
 function openPopup(type, src) {
   let popup = document.getElementById("popup");
   popup.style.display = "flex";
 
-  if(type === "img"){
-    popup.innerHTML = `<img src="${src}">`;
-  } else {
-    popup.innerHTML = `<video src="${src}" controls autoplay></video>`;
-  }
+  popup.innerHTML = type === "img"
+    ? `<img src="${src}">`
+    : `<video src="${src}" controls autoplay></video>`;
 }
 
-// ❌ Close
 function closePopup() {
   document.getElementById("popup").style.display = "none";
 }
 
-// 💬 Comment
+// Comment
 function addComment(e, input) {
   if (e.key === "Enter" && input.value !== "") {
     let div = document.createElement("div");
@@ -191,6 +204,9 @@ function addComment(e, input) {
     input.value = "";
   }
 }
+
+// 🔥 DEFAULT LOAD
+showMedia();
 
 </script>
 
