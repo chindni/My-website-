@@ -1,68 +1,47 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-<title>My Insta Gallery</title>
+<title>My Website</title>
 
 <style>
 body {
-  margin: 0;
-  font-family: Arial;
-  background: #fafafa;
-}
-
-.header {
   background: white;
-  padding: 12px;
+  font-family: Arial;
+  margin: 0;
+}
+
+h1 {
   text-align: center;
-  font-weight: bold;
-  border-bottom: 1px solid #ddd;
 }
 
-.filter {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-}
-
-.filter button {
-  padding: 8px 15px;
-  border: none;
-  background: #eee;
-  border-radius: 20px;
-  cursor: pointer;
-}
-
-.filter button.active {
-  background: black;
-  color: white;
-}
-
+/* ✅ GRID (2 line layout) */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* 1 row me 4 photo */
   gap: 15px;
-  padding: 15px;
+  padding: 20px;
 }
 
-.card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+/* Image box */
+.img-box {
+  text-align: center;
 }
 
-.card img, .card video {
+/* Image */
+.img-box img {
   width: 100%;
-  height: 250px;
+  height: 150px;
   object-fit: cover;
+  border-radius: 10px;
   cursor: pointer;
 }
 
+/* Actions */
 .actions {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  margin-top: 5px;
 }
 
 .like {
@@ -70,12 +49,14 @@ body {
   cursor: pointer;
 }
 
+/* Comment */
 .comment-box input {
   width: 100%;
-  padding: 6px;
-  border: 1px solid #ddd;
+  padding: 5px;
+  margin-top: 5px;
 }
 
+/* Popup */
 #popup {
   display: none;
   position: fixed;
@@ -86,11 +67,12 @@ body {
   background: rgba(0,0,0,0.9);
   justify-content: center;
   align-items: center;
+  z-index: 9999;
 }
 
-#popup img, #popup video {
-  max-width: 90%;
-  max-height: 90%;
+#popup img {
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>
 
@@ -98,116 +80,74 @@ body {
 
 <body>
 
-<div class="header">My Gallery 📸🎥</div>
-
-<div class="filter">
-  <button onclick="filterMedia('all',this)" class="active">All</button>
-  <button onclick="filterMedia('img',this)">Photos</button>
-  <button onclick="filterMedia('video',this)">Videos</button>
-</div>
+<h1>My Photo Gallery 📸</h1>
 
 <div class="gallery" id="gallery"></div>
-<div id="popup" onclick="closePopup()"></div>
+
+<div id="popup" onclick="closeImage()">
+<img id="popupImg">
+</div>
 
 <script>
 
-// ✅ PHOTOS + VIDEOS BOTH
-let media = [
-
-  // 📸 PHOTOS
-  {type:"img", src:"IMG-20251227-WA0004.jpg"},
-  {type:"img", src:"IMG-20251226-WA0002.jpg"},
-  {type:"img", src:"IMG_20251202_123902_970.jpg"},
-  {type:"img", src:"IMG_20251202_123956_839.jpg"},
-  {type:"img", src:"IMG-20250717-WA0006.jpg"},
-  {type:"img", src:"IMG-20250717-WA0023.jpg"},
-  {type:"img", src:"IMG-20250717-WA0029.jpg"},
-  {type:"img", src:"IMG-20250721-WA0004(1).jpg"},
-  {type:"img", src:"IMG-20250721-WA0026.jpg"},
-  {type:"img", src:"IMG-20250721-WA0028.jpg"},
-  {type:"img", src:"IMG-20250721-WA0032.jpg"},
-  {type:"img", src:"IMG-20250721-WA0036.jpg"},
-  {type:"img", src:"IMG-20250721-WA0004.jpg"},
-  {type:"img", src:"IMG-20250228-WA0002.jpg"},
-
-  // 🎥 VIDEOS (तुम्हारे वापस add किए)
-  {type:"video", src:"VID_20260405_032449_956.mp4"},
-  {type:"video", src:"VID_20260405_032525_010.mp4"}
+let images = [
+  "IMG-20260325-WA0003.jpg",
+  "IMG-20260325-WA0007.jpg",
+  "IMG-20260325-WA0008.jpg",
+  "IMG-20260325-WA0010.jpg",
+  "lv_0_20260219200139.jpg",
+  "Snapchat-1316453477.jpg",
+  "IMG_20260318_095656_509.jpg",
+  "Snapchat-1816127803.jpg"
 ];
 
 let gallery = document.getElementById("gallery");
 
-// ✅ SHOW MEDIA
-function showMedia(type="all") {
-  gallery.innerHTML = "";
+images.forEach((src) => {
+  let box = document.createElement("div");
+  box.className = "img-box";
 
-  media.forEach((item) => {
+  box.innerHTML = `
+    <img src="${src}" onclick="openImage('${src}')">
+    
+    <div class="actions">
+      <span class="like" onclick="like(this)">❤️ 0</span>
+      <a href="${src}" download>Save</a>
+      <button onclick="shareImage('${src}')">Share</button>
+    </div>
 
-    if(type !== "all" && item.type !== type) return;
+    <div class="comment-box">
+      <input type="text" placeholder="Comment..." onkeydown="addComment(event,this)">
+      <div></div>
+    </div>
+  `;
 
-    let card = document.createElement("div");
-    card.className = "card";
+  gallery.appendChild(box);
+});
 
-    let mediaTag = item.type === "img"
-      ? `<img src="${item.src}" onclick="openPopup('img','${item.src}')">`
-      : `<video src="${item.src}" onclick="openPopup('video','${item.src}')"></video>`;
-
-    card.innerHTML = `
-      ${mediaTag}
-
-      <div class="actions">
-        <span class="like" onclick="like(this)">❤️ 0</span>
-        <span onclick="shareMedia('${item.src}')">🔗</span>
-        <a href="${item.src}" download>💾</a>
-      </div>
-
-      <div class="comment-box">
-        <input type="text" placeholder="Add comment..." onkeydown="addComment(event,this)">
-        <div></div>
-      </div>
-    `;
-
-    gallery.appendChild(card);
-  });
-}
-
-// FILTER
-function filterMedia(type, btn) {
-  document.querySelectorAll(".filter button").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  showMedia(type);
-}
-
-// LIKE
 function like(el) {
   let count = parseInt(el.innerText.split(" ")[1]);
-  el.innerText = "❤️ " + (count + 1);
+  count++;
+  el.innerText = "❤️ " + count;
 }
 
-// SHARE
-function shareMedia(src) {
+function shareImage(src) {
   if (navigator.share) {
-    navigator.share({ title: "Check this", url: src });
+    navigator.share({ title: "Check", url: src });
   } else {
     alert("Share not supported");
   }
 }
 
-// POPUP
-function openPopup(type, src) {
-  let popup = document.getElementById("popup");
-  popup.style.display = "flex";
-
-  popup.innerHTML = type === "img"
-    ? `<img src="${src}">`
-    : `<video src="${src}" controls autoplay></video>`;
+function openImage(src) {
+  document.getElementById("popup").style.display = "flex";
+  document.getElementById("popupImg").src = src;
 }
 
-function closePopup() {
+function closeImage() {
   document.getElementById("popup").style.display = "none";
 }
 
-// COMMENT
 function addComment(e, input) {
   if (e.key === "Enter" && input.value !== "") {
     let div = document.createElement("div");
@@ -217,10 +157,7 @@ function addComment(e, input) {
   }
 }
 
-// LOAD
-showMedia();
-
 </script>
 
 </body>
-  </html>
+</html>
