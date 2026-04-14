@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,15 +14,15 @@ h1 {
   text-align: center;
 }
 
-/* ✅ GRID (2 line layout) */
+/* GRID */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 1 row me 4 photo */
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
   padding: 20px;
 }
 
-/* Image box */
+/* Box */
 .img-box {
   text-align: center;
 }
@@ -35,6 +34,13 @@ h1 {
   object-fit: cover;
   border-radius: 10px;
   cursor: pointer;
+}
+
+/* Video */
+.img-box video {
+  width: 100%;
+  height: 150px;
+  border-radius: 10px;
 }
 
 /* Actions */
@@ -80,7 +86,7 @@ h1 {
 
 <body>
 
-<h1>My Photo Gallery 📸</h1>
+<h1>My Photo & Video Gallery 📸🎥</h1>
 
 <div class="gallery" id="gallery"></div>
 
@@ -90,30 +96,37 @@ h1 {
 
 <script>
 
-let images = [
-  "IMG-20260325-WA0003.jpg",
-  "IMG-20260325-WA0007.jpg",
-  "IMG-20260325-WA0008.jpg",
-  "IMG-20260325-WA0010.jpg",
-  "lv_0_20260219200139.jpg",
-  "Snapchat-1316453477.jpg",
-  "IMG_20260318_095656_509.jpg",
-  "Snapchat-1816127803.jpg"
+// 📸 + 🎥 Media List
+let media = [
+  {type: "img", src: "IMG-20260325-WA0003.jpg"},
+  {type: "img", src: "IMG-20260325-WA0007.jpg"},
+  {type: "img", src: "IMG-20260325-WA0008.jpg"},
+  {type: "img", src: "IMG-20260325-WA0010.jpg"},
+  {type: "img", src: "lv_0_20260219200139.jpg"},
+  {type: "img", src: "Snapchat-1316453477.jpg"},
+  {type: "img", src: "IMG_20260318_095656_509.jpg"},
+  {type: "img", src: "Snapchat-1816127803.jpg"},
+
+  // 🎥 VIDEO ADD
+  {type: "video", src: "20260410_183240.mp4"}
 ];
 
 let gallery = document.getElementById("gallery");
 
-images.forEach((src) => {
+media.forEach((item) => {
   let box = document.createElement("div");
   box.className = "img-box";
 
   box.innerHTML = `
-    <img src="${src}" onclick="openImage('${src}')">
-    
+    ${item.type === "img" 
+      ? `<img src="${item.src}" onclick="openImage('${item.src}')">`
+      : `<video src="${item.src}" controls></video>`
+    }
+
     <div class="actions">
       <span class="like" onclick="like(this)">❤️ 0</span>
-      <a href="${src}" download>Save</a>
-      <button onclick="shareImage('${src}')">Share</button>
+      <a href="${item.src}" download>Save</a>
+      <button onclick="shareImage('${item.src}')">Share</button>
     </div>
 
     <div class="comment-box">
@@ -125,12 +138,14 @@ images.forEach((src) => {
   gallery.appendChild(box);
 });
 
+// ❤️ Like
 function like(el) {
   let count = parseInt(el.innerText.split(" ")[1]);
   count++;
   el.innerText = "❤️ " + count;
 }
 
+// 📤 Share
 function shareImage(src) {
   if (navigator.share) {
     navigator.share({ title: "Check", url: src });
@@ -139,15 +154,18 @@ function shareImage(src) {
   }
 }
 
+// 🔍 Open Image
 function openImage(src) {
   document.getElementById("popup").style.display = "flex";
   document.getElementById("popupImg").src = src;
 }
 
+// ❌ Close Image
 function closeImage() {
   document.getElementById("popup").style.display = "none";
 }
 
+// 💬 Comment
 function addComment(e, input) {
   if (e.key === "Enter" && input.value !== "") {
     let div = document.createElement("div");
